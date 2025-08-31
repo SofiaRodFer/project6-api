@@ -23,8 +23,6 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    val roles: Set<Role> = emptySet(),
+    val roles: Set<Role> = emptySet()
 
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = true)
-    val account: Account? = null
 )

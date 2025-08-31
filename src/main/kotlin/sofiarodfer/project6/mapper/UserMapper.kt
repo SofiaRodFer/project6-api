@@ -12,29 +12,30 @@ import sofiarodfer.project6.entity.User
 @Component
 class UserMapper(private val passwordEncoder: PasswordEncoder) {
 
+    fun toEntity(request: UserCreateRequest, roles: Set<Role>): User {
+        return User(
+            username = request.username,
+            password = passwordEncoder.encode(request.password),
+            roles = roles
+        )
+    }
+
     fun toDTO(user: User): UserDTO {
         return UserDTO(
             id = user.id,
             username = user.username,
             enabled = user.enabled,
-            roles = user.roles.map { it.name }.toSet(),
-            account = user.account?.let {
-                UserDTO.AccountDTO(
-                    firstName = it.firstName,
-                    lastName = it.lastName,
-                    cep = it.cep
-                )
-            }
+            roles = user.roles.map { it.name }.toSet()
         )
     }
 
-    fun toResponse(dto: UserDTO): UserResponse {
+    fun toResponse(dto: UserDTO, account: Account?): UserResponse {
         return UserResponse(
             id = dto.id,
             username = dto.username,
             enabled = dto.enabled,
             roles = dto.roles,
-            account = dto.account?.let {
+            account = account?.let {
                 UserResponse.AccountInfo(
                     firstName = it.firstName,
                     lastName = it.lastName,
@@ -42,20 +43,5 @@ class UserMapper(private val passwordEncoder: PasswordEncoder) {
                 )
             }
         )
-    }
-
-    fun toEntity(request: UserCreateRequest, roles: Set<Role>): User {
-        val user = User(
-            username = request.username,
-            password = passwordEncoder.encode(request.password),
-            roles = roles
-        )
-        val account = Account(
-            firstName = request.firstName,
-            lastName = request.lastName,
-            cep = request.cep,
-            user = user
-        )
-        return user.copy(account = account)
     }
 }
