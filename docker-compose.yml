@@ -1,42 +1,38 @@
 version: '3.8'
 
 services:
-  # Serviço do Banco de Dados PostgreSQL
   db:
-    image: postgres:15 # Usando a imagem oficial do PostgreSQL
+    image: postgres:15
     container_name: project6_db
     environment:
       POSTGRES_DB: project6
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432" # Mapeia a porta do container para a sua máquina (útil para debug)
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Garante que os dados do banco persistam
-    healthcheck: # Verifica se o banco está pronto para aceitar conexões
-      test: ["CMD-SHELL", "pg_isready -U postgres -d project6"]
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d project6"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Serviço da sua Aplicação
   app:
-    build: . # Constrói a imagem usando o Dockerfile na pasta atual
+    build: .
     container_name: project6_app
     ports:
-      - "8080:8080" # Mapeia a porta 8080 da aplicação para a sua máquina
+      - "8080:8080"
     depends_on:
       db:
-        condition: service_healthy # Garante que a app só inicie depois que o banco estiver saudável
+        condition: service_healthy
     environment:
-      # A variável de ambiente que a sua app vai usar para se conectar ao banco
-      # Note que o host é 'db', o nome do serviço do banco de dados.
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/project6
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      # Você pode adicionar outras variáveis aqui, como a do JWT
-      # JWT_SECRET: "seu-secret-aqui"
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      INITIAL_ADMIN_USERNAME: ${INITIAL_ADMIN_USERNAME}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD}
 
-# Volume nomeado para persistir os dados do banco
 volumes:
   postgres_data:
