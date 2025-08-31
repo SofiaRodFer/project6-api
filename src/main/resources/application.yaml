@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/project6
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+jwt:
+  secret: thisisasupersecretkeywithatleastthritytwocharacters
+  expiration: 3600000
