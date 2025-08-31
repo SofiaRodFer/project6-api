@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/project6
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/project6}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -13,6 +13,11 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+
 jwt:
-  secret: thisisasupersecretkeywithatleastthritytwocharacters
+  secret: ${JWT_SECRET:thisisasupersecretkeywithatleastthritytwocharacters}
   expiration: 3600000
+
+logging:
+  level:
+    org.springframework.security: DEBUG

@@ -22,7 +22,7 @@ CREATE TABLE accounts (
     id BIGSERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    cep CHAR(8) NOT NULL UNIQUE,
+    cep VARCHAR(8) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL UNIQUE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
