@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -14,6 +15,7 @@ import sofiarodfer.project6.security.JwtAuthenticationFilter
 import sofiarodfer.project6.service.CustomUserDetailsService
 
 @Configuration
+@EnableMethodSecurity
 class SecurityConfig(
     private val userDetailsService: CustomUserDetailsService,
     private val jwtFilter: JwtAuthenticationFilter
@@ -37,6 +39,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.requestMatchers("/auth/**").permitAll()
                 it.requestMatchers("/users/me").authenticated()
+                it.requestMatchers("/admin/**").hasRole("ADMIN")
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
