@@ -16,7 +16,7 @@ import sofiarodfer.project6.repository.UserRepository
 class UserService(
     private val userRepository: UserRepository,
     private val roleRepository: RoleRepository,
-    private val accountRepository: AccountRepository, // Nova dependência
+    private val accountRepository: AccountRepository,
     private val userMapper: UserMapper
 ) {
 

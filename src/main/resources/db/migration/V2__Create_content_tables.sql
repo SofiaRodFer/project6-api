@@ -1,0 +1,15 @@
+CREATE TABLE texts (
+    id BIGSERIAL PRIMARY KEY,
+    identifier_tag VARCHAR(255) NOT NULL UNIQUE,
+    content TEXT NOT NULL,
+    visible BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE images (
+    id BIGSERIAL PRIMARY KEY,
+    identifier_tag VARCHAR(255) NOT NULL UNIQUE,
+    file_name VARCHAR(255) NOT NULL,
+    content_type VARCHAR(255) NOT NULL,
+    alt_text VARCHAR(255) NOT NULL,
+    visible BOOLEAN NOT NULL DEFAULT TRUE
+);

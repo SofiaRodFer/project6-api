@@ -2,9 +2,7 @@ package sofiarodfer.project6.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
-import sofiarodfer.project6.dto.request.PasswordRequest
 import sofiarodfer.project6.dto.request.UserCreateRequest
 import sofiarodfer.project6.dto.request.UserUpdateRequest
 import sofiarodfer.project6.dto.response.UserResponse
@@ -17,8 +15,7 @@ import sofiarodfer.project6.service.UserService
 class AdminController(
     private val userService: UserService,
     private val accountRepository: AccountRepository,
-    private val userMapper: UserMapper,
-    private val passwordEncoder: PasswordEncoder
+    private val userMapper: UserMapper
 ) {
     @GetMapping("/users")
     fun listUsers(): List<UserResponse> {
@@ -53,10 +50,5 @@ class AdminController(
     fun deleteUser(@PathVariable id: Long): ResponseEntity<Void> {
         userService.deleteUser(id)
         return ResponseEntity.noContent().build()
-    }
-
-    @PostMapping("/password/encrypt")
-    fun encryptPassword(@RequestBody request: PasswordRequest): String {
-        return passwordEncoder.encode(request.password)
     }
 }
