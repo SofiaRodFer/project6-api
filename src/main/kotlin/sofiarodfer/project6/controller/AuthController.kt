@@ -1,5 +1,6 @@
 package sofiarodfer.project6.controller
 
+import jakarta.validation.Valid
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.web.bind.annotation.*
@@ -14,7 +15,7 @@ class AuthController(
     private val jwtService: JwtService
 ) {
     @PostMapping("/login")
-    fun login(@RequestBody request: AuthRequest): AuthResponse {
+    fun login(@Valid @RequestBody request: AuthRequest): AuthResponse {
         val authentication = authManager.authenticate(
             UsernamePasswordAuthenticationToken(request.username, request.password)
         )

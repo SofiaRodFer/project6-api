@@ -10,7 +10,9 @@ import sofiarodfer.project6.entity.Role
 import sofiarodfer.project6.entity.User
 
 @Component
-class UserMapper(private val passwordEncoder: PasswordEncoder) {
+class UserMapper(
+    private val passwordEncoder: PasswordEncoder
+) {
 
     fun toEntity(request: UserCreateRequest, roles: Set<Role>): User {
         return User(

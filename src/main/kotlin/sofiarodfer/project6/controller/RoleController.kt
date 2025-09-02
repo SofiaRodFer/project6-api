@@ -1,5 +1,6 @@
 package sofiarodfer.project6.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import sofiarodfer.project6.dto.request.RoleRequest
@@ -21,13 +22,13 @@ class RoleController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createRole(@RequestBody request: RoleRequest): RoleResponse {
+    fun createRole(@Valid @RequestBody request: RoleRequest): RoleResponse {
         val createdRole = roleService.createRole(request)
         return roleMapper.toResponse(createdRole)
     }
 
     @PutMapping("/{id}")
-    fun updateRole(@PathVariable id: Long, @RequestBody request: RoleRequest): RoleResponse {
+    fun updateRole(@Valid @PathVariable id: Long, @RequestBody request: RoleRequest): RoleResponse {
         val updatedRole = roleService.updateRole(id, request)
         return roleMapper.toResponse(updatedRole)
     }

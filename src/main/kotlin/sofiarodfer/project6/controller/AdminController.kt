@@ -1,5 +1,6 @@
 package sofiarodfer.project6.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -33,7 +34,7 @@ class AdminController(
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody request: UserCreateRequest): UserResponse {
+    fun createUser(@Valid @RequestBody request: UserCreateRequest): UserResponse {
         val userDTO = userService.createUser(request)
         val account = accountRepository.findByUserId(userDTO.id).orElse(null)
         return userMapper.toResponse(userDTO, account)
