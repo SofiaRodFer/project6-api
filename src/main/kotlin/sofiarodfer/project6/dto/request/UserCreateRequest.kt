@@ -12,7 +12,7 @@ data class UserCreateRequest(
     @field:Size(max = 255, message = "Password must be less than 256 characters long")
     val password: String,
 
-    val roles: Set<String>? = setOf("NONE"),
+    val roles: Set<String> = emptySet(),
 
     @field:NotBlank(message = "First name cannot be blank")
     @field:Size(max = 100, message = "First name cannot be longer than 100 characters")

@@ -3,24 +3,23 @@ package sofiarodfer.project6.service
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import sofiarodfer.project6.config.properties.JwtProperties
 import java.util.*
 import javax.crypto.SecretKey
 
 @Service
 class JwtService(
-    @Value("\${jwt.secret}") secret: String,
-    @Value("\${jwt.expiration}") private val expirationMs: Long
+    private val jwtProperties: JwtProperties
 ) {
-    private val key: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray())
+    private val key: SecretKey = Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray())
 
     fun generateToken(username: String, roles: Collection<String>): String =
         Jwts.builder()
             .setSubject(username)
             .claim("roles", roles)
             .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + expirationMs))
+            .setExpiration(Date(System.currentTimeMillis() + jwtProperties.expiration))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
 

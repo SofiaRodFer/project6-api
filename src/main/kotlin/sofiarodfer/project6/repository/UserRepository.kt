@@ -6,4 +6,6 @@ import java.util.*
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findByUsername(username: String): Optional<User>
+
+    fun findByRoles_Id(roleId: Long): List<User>
 }

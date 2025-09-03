@@ -2,22 +2,28 @@ package sofiarodfer.project6.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sofiarodfer.project6.config.properties.SecurityProperties
+import sofiarodfer.project6.config.properties.findRoleByIdentifier
+import sofiarodfer.project6.config.properties.isUserAdmin
 import sofiarodfer.project6.dto.UserDTO
 import sofiarodfer.project6.dto.request.UserCreateRequest
 import sofiarodfer.project6.dto.request.UserUpdateRequest
 import sofiarodfer.project6.entity.Account
 import sofiarodfer.project6.entity.User
+import sofiarodfer.project6.enum.RoleEnum
 import sofiarodfer.project6.mapper.UserMapper
 import sofiarodfer.project6.repository.AccountRepository
 import sofiarodfer.project6.repository.RoleRepository
 import sofiarodfer.project6.repository.UserRepository
+import kotlin.jvm.optionals.getOrElse
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val roleRepository: RoleRepository,
     private val accountRepository: AccountRepository,
-    private val userMapper: UserMapper
+    private val userMapper: UserMapper,
+    private val securityProperties: SecurityProperties
 ) {
 
     fun findAll(): List<UserDTO> {
@@ -34,10 +40,16 @@ class UserService(
         if (userRepository.findByUsername(request.username).isPresent) {
             throw IllegalArgumentException("Username ${request.username} already exists")
         }
-        val roles = request.roles.map { roleName ->
+        val requestedRoles = request.roles.map { roleName ->
             roleRepository.findByName(roleName).orElseThrow { RuntimeException("Role not found: $roleName") }
         }.toSet()
-        val userEntity = userMapper.toEntity(request, roles)
+        val finalRoles = requestedRoles.ifEmpty {
+            val defaultRoleName = securityProperties.findRoleByIdentifier(RoleEnum.DEFAULT)
+            val defaultRole = roleRepository.findByName(defaultRoleName)
+                .orElseThrow { IllegalStateException("Critical role '$defaultRoleName' is missing.") }
+            setOf(defaultRole)
+        }
+        val userEntity = userMapper.toEntity(request, finalRoles)
         val savedUser = userRepository.save(userEntity)
         val accountEntity = Account(
             firstName = request.firstName,
@@ -73,6 +85,10 @@ class UserService(
 
     @Transactional
     fun deleteUser(id: Long) {
+        val user = userRepository.findById(id).getOrElse { throw RuntimeException("User not found") }
+        if (securityProperties.isUserAdmin(user)) {
+            throw IllegalArgumentException("Cannot delete admin user")
+        }
         accountRepository.findByUserId(id).ifPresent { account ->
             accountRepository.delete(account)
         }

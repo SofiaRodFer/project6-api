@@ -23,6 +23,6 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    val roles: Set<Role> = emptySet()
+    var roles: Set<Role> = emptySet()
 
 )

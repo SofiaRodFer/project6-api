@@ -21,3 +21,16 @@ jwt:
 logging:
   level:
     org.springframework.security: INFO
+
+app:
+  initialization:
+    users:
+      - identifier: ADMIN
+        username: ${INITIAL_ADMIN_USERNAME}
+        password: ${INITIAL_ADMIN_PASSWORD}
+  security:
+    roles:
+      - identifier: ADMIN
+        name: ${ADMIN_ROLE_NAME}
+      - identifier: DEFAULT
+        name: ${DEFAULT_ROLE_NAME}
