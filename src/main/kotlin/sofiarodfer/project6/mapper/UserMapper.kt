@@ -27,7 +27,7 @@ class UserMapper(
             id = user.id,
             username = user.username,
             enabled = user.enabled,
-            roles = user.roles.map { it.name }.toSet()
+            roles = user.roles
         )
     }
 
