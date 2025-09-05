@@ -18,7 +18,7 @@ class UserMapper(
         return User(
             username = request.username,
             password = passwordEncoder.encode(request.password),
-            roles = roles
+            roles = roles.toMutableSet()
         )
     }
 

@@ -50,7 +50,7 @@ class AdminUserInitializer(
         val adminUser = User(
             username = adminAppUser.username,
             password = passwordEncoder.encode(adminAppUser.password),
-            roles = setOf(adminRole),
+            roles = mutableSetOf(adminRole),
             enabled = true
         )
         return userRepository.save(adminUser)

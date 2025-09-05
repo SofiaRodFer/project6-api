@@ -69,7 +69,7 @@ class UserService(
         }?.toSet()
         val updatedUser = currentUser.copy(
             enabled = request.enabled ?: currentUser.enabled,
-            roles = newRoles ?: currentUser.roles
+            roles = newRoles?.toMutableSet() ?: currentUser.roles.toMutableSet()
         )
         val savedUser = userRepository.save(updatedUser)
         accountRepository.findByUserId(id).ifPresent { currentAccount ->
