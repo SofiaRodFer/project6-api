@@ -5,10 +5,12 @@ import org.springframework.transaction.annotation.Transactional
 import sofiarodfer.project6.config.properties.SecurityProperties
 import sofiarodfer.project6.config.properties.findRoleByIdentifier
 import sofiarodfer.project6.config.properties.isRoleDeletable
+import sofiarodfer.project6.dto.RoleDTO
 import sofiarodfer.project6.dto.request.RoleRequest
 import sofiarodfer.project6.entity.Role
 import sofiarodfer.project6.enum.RoleEnum
-import sofiarodfer.project6.mapper.RoleMapper
+import sofiarodfer.project6.mapper.toDTO
+import sofiarodfer.project6.mapper.toEntity
 import sofiarodfer.project6.repository.RoleRepository
 import sofiarodfer.project6.repository.UserRepository
 
@@ -16,7 +18,6 @@ import sofiarodfer.project6.repository.UserRepository
 class RoleService(
     private val roleRepository: RoleRepository,
     private val userRepository: UserRepository,
-    private val roleMapper: RoleMapper,
     private val securityProperties: SecurityProperties
 ) {
 
@@ -25,24 +26,24 @@ class RoleService(
     }
 
     @Transactional
-    fun createRole(request: RoleRequest): Role {
+    fun createRole(request: RoleRequest): RoleDTO {
         val newName = request.name.uppercase().replace(" ", "_")
         if (roleRepository.findByName(newName).isPresent) {
             throw IllegalArgumentException("Role '$newName' already exists")
         }
-        val roleEntity = roleMapper.toEntity(request)
-        return roleRepository.save(roleEntity)
+        val roleEntity = request.toEntity()
+        return roleRepository.save(roleEntity).toDTO()
     }
 
     @Transactional
-    fun updateRole(id: Long, request: RoleRequest): Role {
+    fun updateRole(id: Long, request: RoleRequest): RoleDTO {
         val currentRole = roleRepository.findById(id)
             .orElseThrow { RuntimeException("Role not found with id: $id") }
 
         val updatedRole = currentRole.copy(
             name = request.name.uppercase().replace(" ", "_")
         )
-        return roleRepository.save(updatedRole)
+        return roleRepository.save(updatedRole).toDTO()
     }
 
     @Transactional

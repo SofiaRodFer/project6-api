@@ -1,23 +1,29 @@
 package sofiarodfer.project6.mapper
 
-import org.springframework.stereotype.Component
+import sofiarodfer.project6.dto.RoleDTO
 import sofiarodfer.project6.dto.request.RoleRequest
 import sofiarodfer.project6.dto.response.RoleResponse
 import sofiarodfer.project6.entity.Role
 
-@Component
-class RoleMapper {
+fun RoleRequest.toEntity() =
+    Role(
+        name = this.name.uppercase().replace(" ", "_")
+    )
 
-    fun toEntity(request: RoleRequest): Role {
-        return Role(
-            name = request.name.uppercase().replace(" ", "_")
-        )
-    }
+fun Role.toResponse() =
+    RoleResponse(
+        id = this.id,
+        name = this.name
+    )
 
-    fun toResponse(role: Role): RoleResponse {
-        return RoleResponse(
-            id = role.id,
-            name = role.name
-        )
-    }
-}
+fun RoleDTO.toResponse() =
+    RoleResponse(
+        id = this.id,
+        name = this.name
+    )
+
+fun Role.toDTO() =
+    RoleDTO(
+        id = this.id,
+        name = this.name
+    )
