@@ -2,7 +2,6 @@ package sofiarodfer.project6.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import sofiarodfer.project6.dto.response.PageResponse
 import sofiarodfer.project6.mapper.toResponse
 import sofiarodfer.project6.service.PageService
 

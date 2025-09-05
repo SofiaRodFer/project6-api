@@ -21,9 +21,8 @@ class RoleService(
     private val securityProperties: SecurityProperties
 ) {
 
-    fun findAll(): List<Role> {
-        return roleRepository.findAll()
-    }
+    fun findAll() =
+        roleRepository.findAll().map { it.toDTO() }
 
     @Transactional
     fun createRole(request: RoleRequest): RoleDTO {

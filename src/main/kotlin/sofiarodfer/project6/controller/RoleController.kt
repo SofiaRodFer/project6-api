@@ -4,7 +4,6 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import sofiarodfer.project6.dto.request.RoleRequest
-import sofiarodfer.project6.dto.response.RoleResponse
 import sofiarodfer.project6.mapper.toResponse
 import sofiarodfer.project6.service.RoleService
 
