@@ -21,7 +21,7 @@ class RoleInitializer(
     override fun run(args: ApplicationArguments?) {
         val defaultRoleName = securityProperties.findRoleByIdentifier(RoleEnum.DEFAULT)
         roleRepository.findByName(defaultRoleName).orElseGet {
-            logger.info("Role '$defaultRoleName' não encontrada, criando...")
+            logger.info("Role '$defaultRoleName' not found, creating...")
             roleRepository.save(Role(name = defaultRoleName))
         }
     }

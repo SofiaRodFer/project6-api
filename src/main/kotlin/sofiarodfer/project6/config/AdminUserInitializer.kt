@@ -29,11 +29,11 @@ class AdminUserInitializer(
         val adminRoleName = securityProperties.findAdminRole()
         val adminAppUser = initializationProperties.getAdminAppUser()
         val adminRole = roleRepository.findByName(adminRoleName).orElseGet {
-            logger.info("Role '$adminRoleName' não encontrada, criando...")
+            logger.info("Role '$adminRoleName' not found, creating...")
             roleRepository.save(Role(name = adminRoleName))
         }
         if (userRepository.findByUsername(adminAppUser.username).isEmpty) {
-            logger.info("Usuário admin de produção '${adminAppUser.username}' não encontrado, criando...")
+            logger.info("Production admin user '${adminAppUser.username}' not found, creating...")
             val adminUser = User(
                 username = adminAppUser.username,
                 password = passwordEncoder.encode(adminAppUser.password),
@@ -48,9 +48,9 @@ class AdminUserInitializer(
                 user = savedUser
             )
             accountRepository.save(adminAccount)
-            logger.info("Usuário admin de produção '${adminAppUser.username}' criado com sucesso.")
+            logger.info("Production admin user '${adminAppUser.username}' successfully created.")
         } else {
-            logger.info("Usuário admin de produção '${adminAppUser.username}' já existe. Nenhuma ação necessária.")
+            logger.info("Production admin user '${adminAppUser.username}' already exists. No action necessary.")
         }
     }
 }
