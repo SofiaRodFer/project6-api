@@ -6,29 +6,24 @@ import sofiarodfer.project6.enum.RoleEnum
 
 @ConfigurationProperties("app.security")
 data class SecurityProperties(
-    val roles: List<Role>
+    val roles: List<RoleProperties>
 )
 
-data class Role(
+data class RoleProperties(
     val identifier: RoleEnum,
     val name: String
 )
 
-fun SecurityProperties.findRoleByIdentifier(identifier: RoleEnum): String {
-    val role = this.roles.find { it.identifier == identifier }
-    return role?.name ?: throw RuntimeException("$identifier role not found")
-}
+fun SecurityProperties.findRoleByIdentifier(identifier: RoleEnum) =
+    this.roles.find { it.identifier == identifier }?.name
+        ?: throw RuntimeException("$identifier role not found")
 
-fun SecurityProperties.findAdminRole(): String {
-    return findRoleByIdentifier(RoleEnum.ADMIN)
-}
+fun SecurityProperties.findAdminRole() =
+    findRoleByIdentifier(RoleEnum.ADMIN)
 
-fun SecurityProperties.isRoleDeletable(roleName: String): Boolean {
-    val role = this.roles.find { it.name == roleName }
-    return role == null
-}
+fun SecurityProperties.isRoleDeletable(roleName: String) =
+    this.roles.find { it.name == roleName } == null
 
-fun SecurityProperties.isUserAdmin(user: User): Boolean {
-    val adminRole = user.roles.find { it.name == findAdminRole() }
-    return adminRole != null
-}
+
+fun SecurityProperties.isUserAdmin(user: User) =
+    user.roles.find { it.name == findAdminRole() } != null

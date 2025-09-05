@@ -3,9 +3,6 @@ package sofiarodfer.project6.controller
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import sofiarodfer.project6.dto.response.ImageResponse
-import sofiarodfer.project6.dto.response.TextResponse
-import sofiarodfer.project6.mapper.TextMapper
 import sofiarodfer.project6.mapper.toResponse
 import sofiarodfer.project6.service.ImageService
 import sofiarodfer.project6.service.TextService
@@ -14,8 +11,7 @@ import sofiarodfer.project6.service.TextService
 @RequestMapping("/admin/content")
 class ContentAdminController(
     private val textService: TextService,
-    private val imageService: ImageService,
-    private val textMapper: TextMapper
+    private val imageService: ImageService
 ) {
     @PostMapping("/texts")
     @ResponseStatus(HttpStatus.CREATED)
@@ -23,10 +19,8 @@ class ContentAdminController(
         @RequestParam("identifierTag") identifierTag: String,
         @RequestParam("content") content: String,
         @RequestParam("pageId") pageId: Long
-    ): TextResponse {
-        val textDto = textService.createText(identifierTag, content, pageId)
-        return textMapper.toResponse(textDto)
-    }
+    ) =
+        textService.createText(identifierTag, content, pageId).toResponse()
 
     @PostMapping("/images")
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,8 +29,7 @@ class ContentAdminController(
         @RequestParam("altText") altText: String,
         @RequestParam("identifierTag") identifierTag: String,
         @RequestParam("pageId") pageId: Long
-    ): ImageResponse {
-        val imageDto = imageService.saveLocalImage(file, altText, identifierTag, pageId)
-        return imageDto.toResponse()
-    }
+    ) =
+        imageService.saveLocalImage(file, altText, identifierTag, pageId).toResponse()
+
 }

@@ -14,10 +14,8 @@ class RoleController(
     private val roleService: RoleService
 ) {
     @GetMapping
-    fun listRoles(): List<RoleResponse> {
-        val roles = roleService.findAll()
-        return roles.map { it.toResponse() }
-    }
+    fun listRoles() =
+        roleService.findAll().map { it.toResponse() }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
