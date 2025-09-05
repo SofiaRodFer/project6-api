@@ -14,6 +14,6 @@ data class AppUser(
     val password: String
 )
 
-fun InitializationProperties.getAdminAppUser(): AppUser {
-    return this.users.find { it.identifier == RoleEnum.ADMIN } ?: throw RuntimeException("Admin user not found")
-}
+fun InitializationProperties.getAdminAppUser() =
+    this.users.find { it.identifier == RoleEnum.ADMIN }
+        ?: throw RuntimeException("Admin user not found")

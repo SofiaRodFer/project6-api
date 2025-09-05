@@ -13,20 +13,15 @@ class PageAdminController(
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createPage(@RequestParam name: String): PageResponse {
-        val pageDto = pageService.createPage(name)
-        return pageDto.toResponse()
-    }
+    fun createPage(@RequestParam name: String) =
+        pageService.createPage(name).toResponse()
 
     @GetMapping("/all")
-    fun listPages(): List<PageResponse> {
-        val pageDTOs = pageService.findAll()
-        return pageDTOs.map { page -> page.toResponse() }
-    }
+    fun listPages() =
+        pageService.findAll().map{ it.toResponse() }
 
     @GetMapping
-    fun findByName(@RequestParam name: String): PageResponse {
-        val pageDTO = pageService.findByName(name)
-        return pageDTO.toResponse()
-    }
+    fun findByName(@RequestParam name: String) =
+        pageService.findByName(name).toResponse()
+
 }

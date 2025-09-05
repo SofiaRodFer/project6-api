@@ -19,10 +19,8 @@ class AdminController(
     private val userMapper: UserMapper
 ) {
     @GetMapping("/users")
-    fun listUsers(): List<UserResponse> {
-        val userDTOs = userService.findAll()
-        return userDTOs.map { userMapper.toResponse(it, null) }
-    }
+    fun listUsers() =
+        userService.findAll().map { userMapper.toResponse(it, null) }
 
     @GetMapping("/users/{id}")
     fun getUserById(@PathVariable id: Long): UserResponse {

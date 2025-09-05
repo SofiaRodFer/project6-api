@@ -26,31 +26,44 @@ class AdminUserInitializer(
     private val logger = LoggerFactory.getLogger(AdminUserInitializer::class.java)
 
     override fun run(args: ApplicationArguments?) {
-        val adminRoleName = securityProperties.findAdminRole()
         val adminAppUser = initializationProperties.getAdminAppUser()
-        val adminRole = roleRepository.findByName(adminRoleName).orElseGet {
-            logger.info("Role '$adminRoleName' not found, creating...")
-            roleRepository.save(Role(name = adminRoleName))
-        }
+        val adminRole = retrieveAdminRole()
         if (userRepository.findByUsername(adminAppUser.username).isEmpty) {
             logger.info("Production admin user '${adminAppUser.username}' not found, creating...")
-            val adminUser = User(
-                username = adminAppUser.username,
-                password = passwordEncoder.encode(adminAppUser.password),
-                roles = setOf(adminRole),
-                enabled = true
-            )
-            val savedUser = userRepository.save(adminUser)
-            val adminAccount = Account(
-                firstName = "Admin",
-                lastName = "System",
-                cep = "00000000",
-                user = savedUser
-            )
-            accountRepository.save(adminAccount)
+            val savedUser = createAdminUser(adminAppUser, adminRole)
+            createAdminAccount(savedUser)
             logger.info("Production admin user '${adminAppUser.username}' successfully created.")
         } else {
             logger.info("Production admin user '${adminAppUser.username}' already exists. No action necessary.")
         }
     }
+
+    private fun retrieveAdminRole(): Role {
+        val adminRoleName = securityProperties.findAdminRole()
+        return roleRepository.findByName(adminRoleName).orElseGet {
+            logger.info("Role '$adminRoleName' not found, creating...")
+            roleRepository.save(Role(name = adminRoleName))
+        }
+    }
+
+    private fun createAdminUser(adminAppUser: AppUser, adminRole: Role): User {
+        val adminUser = User(
+            username = adminAppUser.username,
+            password = passwordEncoder.encode(adminAppUser.password),
+            roles = setOf(adminRole),
+            enabled = true
+        )
+        return userRepository.save(adminUser)
+    }
+
+    private fun createAdminAccount(savedUser: User): Account {
+        val adminAccount = Account(
+            firstName = "Admin",
+            lastName = "System",
+            cep = "00000000",
+            user = savedUser
+        )
+        return accountRepository.save(adminAccount)
+    }
+
 }
