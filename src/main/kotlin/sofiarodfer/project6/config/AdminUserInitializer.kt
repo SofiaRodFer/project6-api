@@ -5,14 +5,10 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
-import sofiarodfer.project6.config.properties.InitializationProperties
-import sofiarodfer.project6.config.properties.SecurityProperties
-import sofiarodfer.project6.config.properties.findRoleByIdentifier
-import sofiarodfer.project6.config.properties.getAdminAppUser
+import sofiarodfer.project6.config.properties.*
 import sofiarodfer.project6.entity.Account
 import sofiarodfer.project6.entity.Role
 import sofiarodfer.project6.entity.User
-import sofiarodfer.project6.enum.RoleEnum
 import sofiarodfer.project6.repository.AccountRepository
 import sofiarodfer.project6.repository.RoleRepository
 import sofiarodfer.project6.repository.UserRepository
@@ -30,7 +26,7 @@ class AdminUserInitializer(
     private val logger = LoggerFactory.getLogger(AdminUserInitializer::class.java)
 
     override fun run(args: ApplicationArguments?) {
-        val adminRoleName = securityProperties.findRoleByIdentifier(RoleEnum.ADMIN)
+        val adminRoleName = securityProperties.findAdminRole()
         val adminAppUser = initializationProperties.getAdminAppUser()
         val adminRole = roleRepository.findByName(adminRoleName).orElseGet {
             logger.info("Role '$adminRoleName' não encontrada, criando...")

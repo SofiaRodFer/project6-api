@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import sofiarodfer.project6.config.properties.SecurityProperties
+import sofiarodfer.project6.config.properties.findAdminRole
 import sofiarodfer.project6.security.JwtAuthenticationFilter
 import sofiarodfer.project6.service.CustomUserDetailsService
 
@@ -19,7 +21,8 @@ import sofiarodfer.project6.service.CustomUserDetailsService
 @EnableMethodSecurity
 class SecurityConfig(
     private val userDetailsService: CustomUserDetailsService,
-    private val jwtFilter: JwtAuthenticationFilter
+    private val jwtFilter: JwtAuthenticationFilter,
+    private val securityProperties: SecurityProperties
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -45,7 +48,7 @@ class SecurityConfig(
                 it.requestMatchers("/auth/**").permitAll()
                 it.requestMatchers("/content/**").authenticated()
                 it.requestMatchers("/users/me").authenticated()
-                it.requestMatchers("/admin/**").hasRole("ADMIN")
+                it.requestMatchers("/admin/**").hasRole(securityProperties.findAdminRole())
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
